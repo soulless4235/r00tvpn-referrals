@@ -92,9 +92,11 @@ async function load() {
   $('bot-status').textContent = 'Не удалось загрузить: ' + last.message
 }
 
-$('config').addEventListener('submit', async (event) => {
-  event.preventDefault()
-  const button = event.submitter
+// The frame is sandboxed without allow-forms, so a form is never submitted (no submit event):
+// saving is the button's click, and Enter in a field does the same.
+async function save() {
+  const button = $('save')
+  if (button.disabled) return
   button.disabled = true
   $('saved').textContent = ''
   const body = { bot_token: $('bot_token').value }
@@ -109,6 +111,14 @@ $('config').addEventListener('submit', async (event) => {
     $('saved').textContent = 'Не сохранено: ' + e.message
   } finally {
     button.disabled = false
+  }
+}
+
+$('save').addEventListener('click', save)
+$('config').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault()
+    save()
   }
 })
 
