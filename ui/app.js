@@ -68,13 +68,28 @@ function show(st) {
   }
 }
 
+// The panel drops an answer to a call the frame made before its load event (it counts the
+// frame's loads), so the first call waits for the load, and an unanswered read is asked again.
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+  ])
+}
+
 async function load() {
-  try {
-    show(await call('GET', '/status'))
-  } catch (e) {
-    $('bot-status').className = 'error'
-    $('bot-status').textContent = 'Не удалось загрузить: ' + e.message
+  let last
+  for (let attempt = 0; attempt < 4; attempt++) {
+    try {
+      show(await withTimeout(call('GET', '/status'), 3000))
+      return
+    } catch (e) {
+      last = e
+      if (e.message !== 'timeout') break
+    }
   }
+  $('bot-status').className = 'error'
+  $('bot-status').textContent = 'Не удалось загрузить: ' + last.message
 }
 
 $('config').addEventListener('submit', async (event) => {
@@ -97,4 +112,5 @@ $('config').addEventListener('submit', async (event) => {
   }
 })
 
-load()
+if (document.readyState === 'complete') setTimeout(load, 200)
+else window.addEventListener('load', () => setTimeout(load, 200))
