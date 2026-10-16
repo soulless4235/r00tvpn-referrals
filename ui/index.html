@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Приведи друга</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <section class="card">
+        <h2>Бот приглашений</h2>
+        <p id="bot-status" class="muted">Загрузка…</p>
+        <form id="config">
+          <label>
+            Токен бота от @BotFather
+            <input id="bot_token" type="password" autocomplete="off" placeholder="123456:ABC…" />
+            <small id="token-hint">Создайте отдельного бота в @BotFather и вставьте его токен.</small>
+          </label>
+          <label>
+            Бот сервиса, где друг оформляет подписку
+            <input id="service_bot" type="text" placeholder="r00tvpn_bot" />
+          </label>
+          <label>
+            Промокод для друга
+            <input id="promo_code" type="text" placeholder="FRIEND30" />
+            <small>Создайте его в «Платежи → Промокоды»: только первая покупка, 1 раз на клиента.</small>
+          </label>
+          <label>
+            Что даёт промокод
+            <input id="promo_note" type="text" placeholder="−30% на первую оплату" />
+          </label>
+          <label>
+            Дней пригласившему за каждого оплатившего друга
+            <input id="reward_days" type="number" min="1" max="365" />
+          </label>
+          <label>
+            Пробный тариф
+            <input id="trial_tariff" type="text" placeholder="Пробный" />
+            <small>Друг только на этом тарифе считается новым клиентом.</small>
+          </label>
+          <button type="submit">Сохранить</button>
+          <p id="saved" class="muted"></p>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Итоги</h2>
+        <div class="totals">
+          <div><b id="referrers">—</b><span>приглашают</span></div>
+          <div><b id="invited">—</b><span>перешли по ссылкам</span></div>
+          <div><b id="paid">—</b><span>оплатили</span></div>
+          <div><b id="days">—</b><span>дней начислено</span></div>
+        </div>
+        <h3>Последние оплаты друзей</h3>
+        <ul id="recent" class="muted"><li>Пока нет</li></ul>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
